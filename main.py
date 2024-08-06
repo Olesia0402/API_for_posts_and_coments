@@ -53,11 +53,36 @@ app.include_router(users.router, prefix='/api')
 
 @app.get("/")
 def read_root():
+    """
+    A function that handles the GET request to the root URL ("/"). It returns a JSON response
+    with a message "Hello World".
+
+    Returns:
+        dict: A dictionary containing a message "Hello World".
+    """
     return {"message": "Hello World"}
 
 
 @app.get("/api/healthchecker")
 async def healthchecker(db: AsyncSession = Depends(get_db)):
+    """
+    Health checker endpoint for the API.
+
+    This endpoint is used to check the health of the API and the database connection.
+    It makes a request to the database to execute a simple query and checks if the result is not None.
+    If the result is None, it raises an HTTPException with a status code of 500 and a detail message indicating that the database is not configured correctly.
+    If the result is not None, it returns a JSON response with a message welcoming the user to FastAPI.
+
+    Parameters:
+    - db (AsyncSession): An asynchronous session object representing the database connection. It is obtained from the get_db dependency.
+
+    Returns:
+    - dict: A dictionary containing a message welcoming the user to FastAPI.
+
+    Raises:
+    - HTTPException: If there is an error connecting to the database, an HTTPException is raised with a status code of 500 and a detail message indicating the error.
+
+    """
     try:
         # Make request
         result = await db.execute(text("SELECT 1"))

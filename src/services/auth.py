@@ -27,7 +27,12 @@ class Auth:
         return self.pwd_context.hash(password)
 
     async def create_access_token(self, data: dict, expires_delta: Optional[float] = None) -> str:
-
+        """
+        Create access token
+        :param data: data
+        :param expires_delta: expires delta
+        :return: access token
+        """
         to_encode = data.copy()
         if expires_delta:
             expire = datetime.now(timezone.utc) + timedelta(seconds=expires_delta)
@@ -38,7 +43,12 @@ class Auth:
         return encoded_access_token
 
     async def create_refresh_token(self, data: dict, expires_delta: Optional[float] = None):
-
+        """
+        Create refresh token
+        :param data: data
+        :param expires_delta: expires delta
+        :return: refresh token
+        """
         to_encode = data.copy()
         if expires_delta:
             expire = datetime.now(timezone.utc) + timedelta(seconds=expires_delta)
@@ -49,7 +59,11 @@ class Auth:
         return encoded_refresh_token
 
     async def decode_refresh_token(self, refresh_token: str):
-
+        """
+        Decode refresh token
+        :param refresh_token: refresh token
+        :return: email
+        """
         try:
             payload = jwt.decode(refresh_token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
             if payload['scope'] == 'refresh_token':
@@ -60,7 +74,12 @@ class Auth:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate credentials')
 
     async def get_current_user(self, token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
-
+        """
+        Get current user
+        :param token: token
+        :param db: database session
+        :return: user
+        """
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -85,7 +104,11 @@ class Auth:
         return user
 
     async def create_email_token(self, data: dict):
-
+        """
+        Create email token
+        :param data: data
+        :return: email token
+        """
         to_encode = data.copy()
         expire = datetime.now(timezone.utc) + timedelta(days=7)
         to_encode.update({"iat": datetime.now(timezone.utc), "exp": expire})
@@ -93,7 +116,11 @@ class Auth:
         return token
     
     async def get_email_from_token(self, token: str):
-
+        """
+        Get email from token
+        :param token: token
+        :return: email
+        """
         try:
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
             email = payload["sub"]

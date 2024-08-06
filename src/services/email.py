@@ -23,7 +23,12 @@ conf = ConnectionConfig(
 
 
 async def send_confirm_email(email: EmailStr, username: str, host: str):
-
+    """
+    :param email:
+    :param username:
+    :param host:
+    :return:
+    """
     try:
         token_verification = await auth_service.create_email_token({"sub": email})
         message = MessageSchema(
@@ -40,7 +45,12 @@ async def send_confirm_email(email: EmailStr, username: str, host: str):
 
 
 async def send_reset_email(email: EmailStr, username: str, host: str):
-
+    """
+    :param email:
+    :param username:
+    :param host:
+    :return:
+    """
     try:
         token_verification = auth_service.create_access_token({"username": username})
         message = MessageSchema(
@@ -57,7 +67,12 @@ async def send_reset_email(email: EmailStr, username: str, host: str):
 
 
 async def send_update_email(email: EmailStr, username: str, host: str):
-
+    """
+    :param email:
+    :param username:
+    :param host:
+    :return:
+    """
     try:
         message = MessageSchema(
             subject="Reset password",
